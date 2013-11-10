@@ -35,7 +35,7 @@ from .models import DNSRecord
 
 
 class Api(object):
-    """"""
+    """Python wrapper around the subreg.cz SOAP API"""
 
     endpoint = 'https://soap.subreg.cz/cmd.php'
 
@@ -53,8 +53,7 @@ class Api(object):
             self.login(username, password)
 
     def login(self, username=None, password=None):
-        """
-        Command `Login`
+        """Command `Login`
         User login to API
         :param username: Username for login
         :param password: Password
@@ -65,8 +64,7 @@ class Api(object):
         self.token = response['ssid']
 
     def check_domain(self, domain):
-        """
-        Command `Check_Domain`
+        """Command `Check_Domain`
         Check if domain is available or not
         :param domain: Domain for check availability
         https://soap.subreg.cz/manual/?cmd=Check_Domain
@@ -78,8 +76,7 @@ class Api(object):
         return False
 
     def info_domain(self, domain):
-        """
-        Command `Info_Domain`
+        """Command `Info_Domain`
         Get informations about a single domain from your account
         :param domain: Domain name for requested informations
         https://soap.subreg.cz/manual/?cmd=Info_Domain
@@ -89,8 +86,7 @@ class Api(object):
         return response
 
     def info_domain_cz(self, domain):
-        """
-        Command `Info_Domain_CZ`
+        """Command `Info_Domain_CZ`
         Get informations about a single .CZ domain
         :param domain: Domain name for requested informations
         https://soap.subreg.cz/manual/?cmd=Info_Domain_CZ
@@ -100,8 +96,7 @@ class Api(object):
         return response
 
     def domains_list(self):
-        """
-        Command `Domains_List`
+        """Command `Domains_List`
         Get all domains from your account
         :return dict
             :key `domains`: dict of domains
@@ -113,8 +108,7 @@ class Api(object):
         return self._request('Domains_List')
 
     def set_autorenew(self, domain, autorenew):
-        """
-        Command `Set_Autorenew`
+        """Command `Set_Autorenew`
         Set autorenew policy for your domain.
         By default, domain is deleted when it expire.
         You can set autorenew flag to AUTORENEW, then it will use your credit
@@ -134,24 +128,21 @@ class Api(object):
         return False
 
     def create_contact(self, **kwargs):
-        """
-        Command `Create_Contact`
+        """Command `Create_Contact`
         Create contact in Subreg DB
         https://soap.subreg.cz/manual/?cmd=Create_Contact
         """
         raise NotImplementedError
 
     def update_contact(self, **kwargs):
-        """
-        Command `Update_Contact`
+        """Command `Update_Contact`
         Update contact
         https://soap.subreg.cz/manual/?cmd=Update_Contact
         """
         raise NotImplementedError
 
     def info_contact(self, contact_id):
-        """
-        Command `Info_Contact`
+        """Command `Info_Contact`
         Get informations about a single contact from your account
         :param contact_id: ID of your querying contact
         https://soap.subreg.cz/manual/?cmd=Info_Contact
@@ -159,16 +150,14 @@ class Api(object):
         raise NotImplementedError
 
     def contacts_list(self):
-        """
-        Command `Contacts_List`
+        """Command `Contacts_List`
         Get all contacts from your account
         https://soap.subreg.cz/manual/?cmd=Contacts_List
         """
         return self._request('Contacts_List')
 
     def check_object(self, _id, _object):
-        """
-        Command `Check_Object`
+        """Command `Check_Object`
         Check if object is available or not (only CZ,EE)
         :param _id: ID for check availability
         :param _object: contact, nsset, keyset (only CZ, EE)
@@ -177,8 +166,7 @@ class Api(object):
         raise NotImplementedError
 
     def info_object(self, _id, _object):
-        """
-        Command `Info_Object`
+        """Command `Info_Object`
         Info about NIC object (only CZ,EE)
         :param _id: ID for info
         :param _object: contact, nsset, keyset (only CZ, EE)
@@ -187,8 +175,7 @@ class Api(object):
         raise NotImplementedError
 
     def make_order(self, **kwargs):
-        """
-        Command `Make_Order`
+        """Command `Make_Order`
         Create a new order (CreateDomain, ModifyDomain, RenewDomain, ... )
         :arg type:
             https://soap.subreg.cz/manual/?cmd=Create_Domain
@@ -217,8 +204,7 @@ class Api(object):
         raise NotImplementedError
 
     def info_order(self, order_id):
-        """
-        Command `Info_Order`
+        """Command `Info_Order`
         Info about existing order
         :param order_id: Order ID
         https://soap.subreg.cz/manual/?cmd=Info_Order
@@ -226,16 +212,14 @@ class Api(object):
         raise NotImplementedError
 
     def get_credit(self):
-        """
-        Command `Get_Credit`
+        """Command `Get_Credit`
         Get status of your credit
         https://soap.subreg.cz/manual/?cmd=Get_Credit
         """
         return self._request('Get_Credit')
 
     def get_accountings(self, from_date, to_date):
-        """
-        Command `Get_Accountings`
+        """Command `Get_Accountings`
         Get financial statements from account
         :param from_date: Date (YYYY-mm-dd)
         :param to_date: Date (YYYY-mm-dd)
@@ -244,8 +228,7 @@ class Api(object):
         raise NotImplementedError
 
     def client_payment(self, username, amount, currency):
-        """
-        Command `Client_Payment`
+        """Command `Client_Payment`
         Add credit to your sub-user. This command WILL generate invoice,
         if you want just correct current amount of credit for any reason,
         please use command Credit_Correction.
@@ -257,8 +240,7 @@ class Api(object):
         raise NotImplementedError
 
     def credit_correction(self, username, amount, reason):
-        """
-        Command `Credit_Correction`
+        """Command `Credit_Correction`
         Correct credit amount of your sub-users. The amount you specify in this
         command will be added to current amount. Use negative values for
         subtracting credit. Please note that currency will depend on
@@ -271,16 +253,14 @@ class Api(object):
         raise NotImplementedError
 
     def pricelist(self):
-        """
-        Command `Pricelist`
+        """Command `Pricelist`
         Get pricelist from account
         https://soap.subreg.cz/manual/?cmd=Pricelist
         """
         return self._request('Pricelist')
 
     def prices(self, tld):
-        """
-        Command `Prices`
+        """Command `Prices`
         Get Prices for TLD from account
         :type tld: Requested TLD
         https://soap.subreg.cz/manual/?cmd=Prices
@@ -288,8 +268,7 @@ class Api(object):
         raise NotImplementedError
 
     def get_pricelist(self, pricelist):
-        """
-        Command `Get_Pricelist`
+        """Command `Get_Pricelist`
         Return all price information in specified pricelist.
         :param pricelist: Identificator of the pricelist you want to download.
         https://soap.subreg.cz/manual/?cmd=Get_Pricelist
@@ -297,8 +276,7 @@ class Api(object):
         raise NotImplementedError
 
     def set_prices(self, pricelist, tld, currency, prices=None):
-        """
-        Command `Set_Prices`
+        """Command `Set_Prices`
         Change prices in specified pricelist.
         :param pricelist: Identificator of the pricelist you want to download.
         :param tld: TLD for which you want to change prices.
@@ -309,8 +287,7 @@ class Api(object):
         raise NotImplementedError
 
     def download_document(self, document_id):
-        """
-        Command `Download_Document`
+        """Command `Download_Document`
         Get document information and base64 encoded document that you have
         uploaded or generated on your account.
         :param document_id: Document ID, you can get it in response of
@@ -320,8 +297,7 @@ class Api(object):
         raise NotImplementedError
 
     def upload_document(self, name, document, _type=None, filetype=None):
-        """
-        Command `Upload_Document`
+        """Command `Upload_Document`
         Upload document to your account, for use as identification document,
         registration request etc.
         :param name: Filename of the document, including extension
@@ -334,24 +310,21 @@ class Api(object):
         raise NotImplementedError
 
     def list_documents(self):
-        """
-        Command `List_Documents`
+        """Command `List_Documents`
         List documents uploaded or generated on your account.
         https://soap.subreg.cz/manual/?cmd=List_Documents
         """
         return self._request('List_Documents')
 
     def users_list(self):
-        """
-        Command `Users_List`
+        """Command `Users_List`
         Retrieve list of all your sub-users
         https://soap.subreg.cz/manual/?cmd=Users_List
         """
         return self._request('Users_List')
 
     def get_dns_zone(self, domain):
-        """
-        Command `Get_DNS_Zone`
+        """Command `Get_DNS_Zone`
         List of DNS records for specified domain.
         :param domain: Registered domain
         https://soap.subreg.cz/manual/?cmd=Get_DNS_Zone
@@ -367,8 +340,7 @@ class Api(object):
             return records
 
     def add_dns_zone(self, domain, template):
-        """
-        Command `Add_DNS_Zone`
+        """Command `Add_DNS_Zone`
         Add domain to DNS using previously created template.
         :param domain: Registered domain
         :param template: DNS template ID
@@ -377,8 +349,7 @@ class Api(object):
         raise NotImplementedError
 
     def delete_dns_zone(self, domain):
-        """
-        Command `Delete_DNS_Zone`
+        """Command `Delete_DNS_Zone`
         Remove ALL DNS records for specified domain.
         :param domain: Registered domain
         https://soap.subreg.cz/manual/?cmd=Delete_DNS_Zone
@@ -386,10 +357,9 @@ class Api(object):
         raise NotImplementedError
 
     def set_dns_zone(self, domain, records):
-        """
-        Command `Set_DNS_Zone`
-        Specify complete set of records for certain zone. Specified records will
-        replace ALL present records.
+        """Command `Set_DNS_Zone`
+        Specify complete set of records for certain zone.
+        Specified records will replace ALL present records.
         :param domain: Registered domain
         :param records: List of `DNSRecord`
         https://soap.subreg.cz/manual/?cmd=Set_DNS_Zone
@@ -397,8 +367,7 @@ class Api(object):
         raise NotImplementedError
 
     def add_dns_record(self, domain, record):
-        """
-        Command `Add_DNS_Record`
+        """Command `Add_DNS_Record`
         Add DNS record to zone.
         :param domain: Registered domain
         :param record: `DNSRecord`
@@ -417,8 +386,7 @@ class Api(object):
             return False
 
     def modify_dns_record(self, domain, record):
-        """
-        Command `Modify_DNS_Record`
+        """Command `Modify_DNS_Record`
         :param domain: Registered domain
         :param record: `DNSRecord` with ID of existing record
         https://soap.subreg.cz/manual/?cmd=Modify_DNS_Record
@@ -435,8 +403,7 @@ class Api(object):
             return False
 
     def delete_dns_record(self, domain, record_id):
-        """
-        Command `Delete_DNS_Record`
+        """Command `Delete_DNS_Record`
         Remove DNS record from zone.
         :param domain: Registered domain
         :param record_id: ID of existing record
@@ -452,16 +419,14 @@ class Api(object):
             return False
 
     def poll_get(self):
-        """
-        Command `POLL_Get`
+        """Command `POLL_Get`
         Get current poll message
         https://soap.subreg.cz/manual/?cmd=POLL_Get
         """
         return self._request('POLL_Get')
 
     def poll_ack(self, poll_id):
-        """
-        Command `POLL_Ack`
+        """Command `POLL_Ack`
         Ack current poll message
         :param poll_id: POLL ID
         https://soap.subreg.cz/manual/?cmd=POLL_Ack
@@ -469,8 +434,7 @@ class Api(object):
         raise NotImplementedError
 
     def oib_search(self, oib):
-        """
-        Command `OIB_Search`
+        """Command `OIB_Search`
         List domains registered for certain OIB, and get the number of domains
         possible to register for this OIB.
         :param oib: Croatian OIB number
@@ -479,7 +443,9 @@ class Api(object):
         raise NotImplementedError
 
     def set_google_mx_records(self, domain):
-        """Set Google MX rerods"""
+        """Set Google MX rerods
+        Specified records will replace ALL present MX records.
+        """
         records = self.get_dns_zone(domain)
         for record in records:
             # delete all mx records
