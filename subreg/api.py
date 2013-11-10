@@ -9,7 +9,6 @@ from .exceptions import ApiError
 from .models import DNSRecord
 
 
-#noinspection PyProtectedMember
 class Api(object):
     """"""
 
