@@ -2,15 +2,18 @@
 
 from __future__ import unicode_literals
 
+import re
 from SOAPpy import SOAPProxy, typedArrayType
 
-from .exceptions import SubRegError
+from .exceptions import ApiError
+from .models import DNSRecord
 
 
-class SubRegApi(object):
+#noinspection PyProtectedMember
+class Api(object):
     """"""
 
-    ENDPOINT = 'https://soap.subreg.cz/cmd.php'
+    endpoint = 'https://soap.subreg.cz/cmd.php'
 
     response = None
     """Last parsed response from API"""
@@ -21,7 +24,7 @@ class SubRegApi(object):
     def __init__(self, username=None, password=None):
         """"""
         self.token = None
-        self.client = SOAPProxy(self.ENDPOINT)
+        self.client = SOAPProxy(self.endpoint)
         if username and password:
             self.login(username, password)
 
@@ -102,7 +105,7 @@ class SubRegApi(object):
             try:
                 self._request('Set_Autorenew', kwargs)
                 return True
-            except SubRegError:
+            except ApiError:
                 return False
         return False
 
@@ -329,7 +332,15 @@ class SubRegApi(object):
         :param domain: Registered domain
         https://soap.subreg.cz/manual/?cmd=Get_DNS_Zone
         """
-        raise NotImplementedError
+        records = []
+        kwargs = {'domain': domain}
+        response = self._request('Get_DNS_Zone', kwargs)
+        try:
+            for record in response['records']:
+                records.append(DNSRecord(**record))
+            return records
+        except KeyError:
+            return records
 
     def add_dns_zone(self, domain, template):
         """
@@ -366,20 +377,38 @@ class SubRegApi(object):
         Command `Add_DNS_Record`
         Add DNS record to zone.
         :param domain: Registered domain
-        :param record: dict of `DNSRecord`
+        :param record: `DNSRecord`
         https://soap.subreg.cz/manual/?cmd=Add_DNS_Record
         """
-        raise NotImplementedError
+        if not isinstance(record, DNSRecord):
+            raise TypeError
+        record.content = re.sub('\.$', '', record.content)
+        kwargs = {'domain': domain, 'record': record.__dict__}
+        try:
+            response = self._request('Add_DNS_Record', kwargs)
+            record.id = response['record_id']
+            return True
+        except (KeyError, ApiError) as e:
+            print e
+            return False
 
-    def modify_dns_record(self, domain, record_id, record):
+    def modify_dns_record(self, domain, record):
         """
         Command `Modify_DNS_Record`
         :param domain: Registered domain
-        :param record_id: ID of existing record
-        :param record: dict of `DNSRecord`
+        :param record: `DNSRecord` with ID of existing record
         https://soap.subreg.cz/manual/?cmd=Modify_DNS_Record
         """
-        raise NotImplementedError
+        if not isinstance(record, DNSRecord):
+            raise TypeError
+        if not record.id:
+            raise Exception('You must specify `record.id` when edit record.')
+        kwargs = {'domain': domain, 'record': record.__dict__}
+        try:
+            self._request('Modify_DNS_Record', kwargs)
+            return True
+        except (KeyError, ApiError):
+            return False
 
     def delete_dns_record(self, domain, record_id):
         """
@@ -389,7 +418,14 @@ class SubRegApi(object):
         :param record_id: ID of existing record
         https://soap.subreg.cz/manual/?cmd=Delete_DNS_Record
         """
-        raise NotImplementedError
+        if not record_id:
+            raise TypeError
+        kwargs = {'domain': domain, 'record': {'id': record_id}}
+        try:
+            self._request('Delete_DNS_Record', kwargs)
+            return True
+        except ApiError:
+            return False
 
     def poll_get(self):
         """
@@ -418,6 +454,26 @@ class SubRegApi(object):
         """
         raise NotImplementedError
 
+    def set_google_mx_records(self, domain):
+        """Set Google MX rerods"""
+        records = self.get_dns_zone(domain)
+        for record in records:
+            # delete all mx records
+            if record.type == 'MX':
+                self.delete_dns_record(domain, record.id)
+
+        records = [
+            DNSRecord(content='ASPMX.L.GOOGLE.COM.', prio=1),
+            DNSRecord(content='ALT1.ASPMX.L.GOOGLE.COM.', prio=5),
+            DNSRecord(content='ALT2.ASPMX.L.GOOGLE.COM.', prio=5),
+            DNSRecord(content='ASPMX2.GOOGLEMAIL.COM.', prio=10),
+            DNSRecord(content='ASPMX3.GOOGLEMAIL.COM.', prio=10),
+        ]
+        for record in records:
+            record.ttl = 3600
+            record.type = 'MX'
+            self.add_dns_record(domain, record)
+
     def _request(self, command, kwargs=None):
         """"""
         if kwargs is None:
@@ -431,14 +487,14 @@ class SubRegApi(object):
         self.raw_response = raw_response
         if response:
             if response['status'] == 'error':
-                raise SubRegError(
+                raise ApiError(
                     'Major: {} Minor: {} Text: {}'.format(
                         response['error']['errorcode']['major'],
                         response['error']['errorcode']['minor'],
                         response['error']['errormsg'],
                     )
                 )
-            return response['data']
+            return response.get('data')
         raise Exception('Fatal error.')
 
     def _parse_response(self, response):
@@ -462,5 +518,4 @@ class SubRegApi(object):
                 returned = self._parse_response(item)
                 if isinstance(returned, dict):
                     result = dict(result.items() + returned.items())
-
         return result

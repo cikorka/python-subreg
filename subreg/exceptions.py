@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
 
-class SubRegError(Exception):
+class ApiError(Exception):
     """Base class for exceptions in this module."""
     pass
