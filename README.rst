@@ -25,3 +25,6 @@ First import module and instance class
 - Set Google MX records
 
   >>> subreg.set_google_mx_records('example.com')
+
+
+`Subreg API documentation <https://soap.subreg.cz/manual/>`_
