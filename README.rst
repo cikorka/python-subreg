@@ -12,8 +12,8 @@ Using
 -----
 First import module and instance class
 
-    >>> from subreg import Api
-    >>> subreg = Api('username', 'password')
+>>> from subreg import Api
+>>> subreg = Api('username', 'password')
 
 - Get DNS Zone for domain
 
