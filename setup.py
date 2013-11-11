@@ -9,7 +9,7 @@ def readme():
 
 setup(
     name='python-subreg',
-    version='0.0.5',
+    version='0.0.6',
     description='Python wrapper around the subreg.cz SOAP API',
     long_description=readme(),
     classifiers=[
