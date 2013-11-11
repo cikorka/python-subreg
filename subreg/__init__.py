@@ -26,5 +26,4 @@ OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from .api import *
-from .models import *
 from .exceptions import *

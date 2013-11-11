@@ -31,7 +31,6 @@ import re
 from SOAPpy import SOAPProxy, typedArrayType
 
 from .exceptions import ApiError
-from .models import DNSRecord
 
 
 class Api(object):
