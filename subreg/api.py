@@ -335,14 +335,21 @@ class Api(object):
         except KeyError:
             return []
 
-    def add_dns_zone(self, domain, template):
+    def add_dns_zone(self, domain, template=None):
         """Command `Add_DNS_Zone`
         Add domain to DNS using previously created template.
         :param domain: Registered domain
-        :param template: DNS template ID
+        :param template: DNS template ID or template name
         https://soap.subreg.cz/manual/?cmd=Add_DNS_Zone
         """
-        raise NotImplementedError
+        kwargs = {'domain': domain}
+        if not template:
+            kwargs['template'] = template
+        try:
+            self._request('Add_DNS_Zone', kwargs)
+            return True
+        except ApiError:
+            return False
 
     def delete_dns_zone(self, domain):
         """Command `Delete_DNS_Zone`
@@ -350,14 +357,16 @@ class Api(object):
         :param domain: Registered domain
         https://soap.subreg.cz/manual/?cmd=Delete_DNS_Zone
         """
-        raise NotImplementedError
+        kwargs = {'domain': domain}
+        response = self._request('Delete_DNS_Zone', kwargs)
+        return response
 
     def set_dns_zone(self, domain, records):
         """Command `Set_DNS_Zone`
         Specify complete set of records for certain zone.
         Specified records will replace ALL present records.
         :param domain: Registered domain
-        :param records: List of `DNSRecord`
+        :param records: List of dicts of records
         https://soap.subreg.cz/manual/?cmd=Set_DNS_Zone
         """
         raise NotImplementedError
