@@ -329,15 +329,12 @@ class Api(object):
         :param domain: Registered domain
         https://soap.subreg.cz/manual/?cmd=Get_DNS_Zone
         """
-        records = []
         kwargs = {'domain': domain}
         response = self._request('Get_DNS_Zone', kwargs)
         try:
-            for record in response['records']:
-                records.append(DNSRecord(**record))
-            return records
+            return response['records']
         except KeyError:
-            return records
+            return []
 
     def add_dns_zone(self, domain, template):
         """Command `Add_DNS_Zone`
@@ -370,32 +367,46 @@ class Api(object):
         """Command `Add_DNS_Record`
         Add DNS record to zone.
         :param domain: Registered domain
-        :param record: `DNSRecord`
+        :param record: dict wirh params:
+            `name` Hostname (part of hostname, without registered domain)
+            `type` Type of DNS record
+            `content` Value of this record (IP address, hostname, text value,..)
+            `prio` Priority of this record (MX records only)
+            `ttl` TTL value
         https://soap.subreg.cz/manual/?cmd=Add_DNS_Record
         """
-        if not isinstance(record, DNSRecord):
+        if not isinstance(record, dict):
             raise TypeError
-        record.content = re.sub('\.$', '', record.content)
-        kwargs = {'domain': domain, 'record': record.__dict__}
+        # remove leading .
+        record['content'] = re.sub('\.$', '', record['content'])
+        kwargs = {'domain': domain, 'record': record}
         try:
             response = self._request('Add_DNS_Record', kwargs)
-            record.id = response['record_id']
-            return True
-        except (KeyError, ApiError) as e:
-            print e
+            return response['record_id']
+        except (KeyError, ApiError):
             return False
 
     def modify_dns_record(self, domain, record):
         """Command `Modify_DNS_Record`
         :param domain: Registered domain
-        :param record: `DNSRecord` with ID of existing record
+        :param record: dict with ID of existing record
+            `id` ID of existing record
+            `name` Hostname (part of hostname, without registered domain)
+            `type` Type of DNS record
+            `content` Value of this record (IP address, hostname, text value,..)
+            `prio` Priority of this record (MX records only)
+            `ttl` TTL value
         https://soap.subreg.cz/manual/?cmd=Modify_DNS_Record
         """
-        if not isinstance(record, DNSRecord):
+        if not isinstance(record, dict):
             raise TypeError
-        if not record.id:
-            raise Exception('You must specify `record.id` when edit record.')
-        kwargs = {'domain': domain, 'record': record.__dict__}
+        error_message = 'You must specify `record.id` when edit record.'
+        try:
+            if not record['id']:
+                raise Exception(error_message)
+        except KeyError:
+            raise Exception(error_message)
+        kwargs = {'domain': domain, 'record': record}
         try:
             self._request('Modify_DNS_Record', kwargs)
             return True
@@ -449,23 +460,23 @@ class Api(object):
         records = self.get_dns_zone(domain)
         for record in records:
             # delete all mx records
-            if record.type == 'MX':
-                self.delete_dns_record(domain, record.id)
+            if record['type'] == 'MX':
+                self.delete_dns_record(domain, record['id'])
 
         records = [
-            DNSRecord(content='ASPMX.L.GOOGLE.COM.', prio=1),
-            DNSRecord(content='ALT1.ASPMX.L.GOOGLE.COM.', prio=5),
-            DNSRecord(content='ALT2.ASPMX.L.GOOGLE.COM.', prio=5),
-            DNSRecord(content='ASPMX2.GOOGLEMAIL.COM.', prio=10),
-            DNSRecord(content='ASPMX3.GOOGLEMAIL.COM.', prio=10),
+            dict(content='ASPMX.L.GOOGLE.COM.', prio=1),
+            dict(content='ALT1.ASPMX.L.GOOGLE.COM.', prio=5),
+            dict(content='ALT2.ASPMX.L.GOOGLE.COM.', prio=5),
+            dict(content='ASPMX2.GOOGLEMAIL.COM.', prio=10),
+            dict(content='ASPMX3.GOOGLEMAIL.COM.', prio=10),
         ]
         for record in records:
-            record.ttl = 3600
-            record.type = 'MX'
+            record['ttl'] = 3600
+            record['type'] = 'MX'
             self.add_dns_record(domain, record)
 
     def _request(self, command, kwargs=None):
-        """"""
+        """Make request parse response"""
         if kwargs is None:
             kwargs = dict()
         if self.token:
@@ -488,7 +499,7 @@ class Api(object):
         raise Exception('Fatal error.')
 
     def _parse_response(self, response):
-        """"""
+        """Recursively parse response"""
         result = dict()
         if hasattr(response, 'item'):
             result = self._parse_response(response.item)
