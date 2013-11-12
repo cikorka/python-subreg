@@ -53,8 +53,8 @@ class Api(object):
         """
         User login to API
 
-        :param username: Username for login
-        :param password: Password
+        :param str username: Username for login
+        :param str password: Password
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Login
         """
@@ -66,7 +66,7 @@ class Api(object):
         """
         Check if domain is available or not
 
-        :param domain: Domain for check availability
+        :param str domain: Domain for check availability
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Check_Domain
         """
@@ -80,7 +80,7 @@ class Api(object):
         """
         Get informations about a single domain from your account
 
-        :param domain: Domain name for requested informations
+        :param str domain: Domain name for requested informations
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Info_Domain
         """
@@ -92,7 +92,7 @@ class Api(object):
         """
         Get informations about a single .CZ domain
 
-        :param domain: Domain name for requested informations
+        :param str domain: Domain name for requested informations
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Info_Domain_CZ
         """
@@ -121,8 +121,8 @@ class Api(object):
         You can set autorenew flag to AUTORENEW, then it will use your credit
         to renew automatically. RENEWONCE will cause renew only for next year.
 
-        :param domain: Registered domain
-        :param autorenew: Autorenew setting, allowed values:
+        :param str domain: Registered domain
+        :param str autorenew: Autorenew setting, allowed values:
             EXPIRE, AUTORENEW, RENEWONCE
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Set_Autorenew
@@ -156,7 +156,7 @@ class Api(object):
         """
         Get informations about a single contact from your account
 
-        :param contact_id: ID of your querying contact
+        :param int contact_id: ID of your querying contact
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Info_Contact
         """
@@ -174,8 +174,8 @@ class Api(object):
         """
         Check if object is available or not (only CZ,EE)
 
-        :param _id: ID for check availability
-        :param _object: contact, nsset, keyset (only CZ, EE)
+        :param int _id: ID for check availability
+        :param str _object: contact, nsset, keyset (only CZ, EE)
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Check_Object
         """
@@ -185,8 +185,8 @@ class Api(object):
         """
         Info about NIC object (only CZ,EE)
 
-        :param _id: ID for info
-        :param _object: contact, nsset, keyset (only CZ, EE)
+        :param int _id: ID for info
+        :param str _object: contact, nsset, keyset (only CZ, EE)
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Info_Object
         """
@@ -204,7 +204,7 @@ class Api(object):
         """
         Info about existing order
 
-        :param order_id: Order ID
+        :param int order_id: Order ID
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Info_Order
         """
@@ -235,9 +235,9 @@ class Api(object):
         if you want just correct current amount of credit for any reason,
         please use command Credit_Correction.
 
-        :param username: Login username of the use you want to add credit
-        :param amount: Amount of money to add
-        :param currency: Currency of added credit
+        :param str username: Login username of the use you want to add credit
+        :param str amount: Amount of money to add
+        :param str currency: Currency of added credit
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Client_Payment
         """
@@ -250,9 +250,9 @@ class Api(object):
         subtracting credit. Please note that currency will depend on
         current user setting.
 
-        :param username: Login username of the user you want to add credit
-        :param amount: Amount of money to add/subtract
-        :param reason: Human readable reason for this operation
+        :param str username: Login username of the user you want to add credit
+        :param float amount: Amount of money to add/subtract
+        :param str reason: Human readable reason for this operation
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Credit_Correction
         """
@@ -270,7 +270,7 @@ class Api(object):
         """
         Get Prices for TLD from account
 
-        :type tld: Requested TLD
+        :type str tld: Requested TLD
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Prices
         """
@@ -280,7 +280,7 @@ class Api(object):
         """
         Return all price information in specified pricelist.
 
-        :param pricelist: Identificator of the pricelist you want to download.
+        :param str pricelist: Identificator of the pricelist you want to download.
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Get_Pricelist
         """
@@ -290,10 +290,10 @@ class Api(object):
         """
         Change prices in specified pricelist.
 
-        :param pricelist: Identificator of the pricelist you want to download.
-        :param tld: TLD for which you want to change prices.
-        :param currency: Currency code the prices use.
-        :param prices: List of operations with price
+        :param str pricelist: Identificator of the pricelist you want to download.
+        :param str tld: TLD for which you want to change prices.
+        :param str currency: Currency code the prices use.
+        :param str prices: List of operations with price
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Set_Prices
         """
@@ -304,7 +304,7 @@ class Api(object):
         Get document information and base64 encoded document that you have
         uploaded or generated on your account.
 
-        :param document_id: Document ID, you can get it in response of
+        :param int document_id: Document ID, you can get it in response of
                             `Upload_Document` or by `List_Documents`.
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Download_Document
@@ -316,11 +316,11 @@ class Api(object):
         Upload document to your account, for use as identification document,
         registration request etc.
 
-        :param name: Filename of the document, including extension
-        :param document: base64 encoded document
-        :param _type: Type of the document
+        :param str name: Filename of the document, including extension
+        :param str document: base64 encoded document
+        :param str _type: Type of the document
                      (https://soap.subreg.cz/manual/?cmd=Document_Types)
-        :param filetype: MIME type of the file
+        :param str filetype: MIME type of the file
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Upload_Document
         """
@@ -346,7 +346,7 @@ class Api(object):
         """
         List of DNS records for specified domain.
 
-        :param domain: Registered domain
+        :param str domain: Registered domain
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Get_DNS_Zone
         """
@@ -361,8 +361,8 @@ class Api(object):
         """
         Add domain to DNS using previously created template.
 
-        :param domain: Registered domain
-        :param template: DNS template ID or template name
+        :param str domain: Registered domain
+        :param str template: DNS template ID or template name
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Add_DNS_Zone
         """
@@ -379,7 +379,7 @@ class Api(object):
         """
         Remove ALL DNS records for specified domain.
 
-        :param domain: Registered domain
+        :param str domain: Registered domain
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Delete_DNS_Zone
         """
@@ -392,8 +392,8 @@ class Api(object):
         Specify complete set of records for certain zone.
         Specified records will replace ALL present records.
 
-        :param domain: Registered domain
-        :param records: List of dicts of records
+        :param str domain: Registered domain
+        :param list records: List of dicts of records
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Set_DNS_Zone
         """
@@ -403,8 +403,8 @@ class Api(object):
         """
         Add DNS record to zone.
 
-        :param domain: Registered domain
-        :param record: dict with params
+        :param str domain: Registered domain
+        :param dict record: dict with params
 
             :key name: Hostname (part of hostname, without registered domain)
             :key type: Type of DNS record
@@ -430,8 +430,8 @@ class Api(object):
         """
         Midify DNS record at zone.
 
-        :param domain: Registered domain
-        :param record: dict with ID of existing record
+        :param str domain: Registered domain
+        :param dict record: dict with ID of existing record
 
             :key id: ID of existing record
             :key name: Hostname (part of hostname, without registered domain)
@@ -462,8 +462,8 @@ class Api(object):
         """
         Remove DNS record from zone.
 
-        :param domain: Registered domain
-        :param record_id: ID of existing record
+        :param str domain: Registered domain
+        :param int record_id: ID of existing record
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Delete_DNS_Record
         """
@@ -488,7 +488,7 @@ class Api(object):
         """
         Ack current poll message
 
-        :param poll_id: POLL ID
+        :param int poll_id: POLL ID
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=POLL_Ack
         """
@@ -499,7 +499,7 @@ class Api(object):
         List domains registered for certain OIB, and get the number of domains
         possible to register for this OIB.
 
-        :param oib: Croatian OIB number
+        :param str oib: Croatian OIB number
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=OIB_Search
         """
