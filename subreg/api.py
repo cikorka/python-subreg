@@ -505,6 +505,8 @@ class Api(object):
         """
         raise NotImplementedError
 
+    # -- Orders ----------------------------------------------------------------
+
     def create_domain(self):
         """Order: `Create_Domain`
         Create a new domain.
