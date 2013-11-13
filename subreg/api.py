@@ -141,6 +141,7 @@ class Api(object):
         Create contact in Subreg DB
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Create_Contact
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -149,6 +150,7 @@ class Api(object):
         Update contact
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Update_Contact
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -159,6 +161,7 @@ class Api(object):
         :param int contact_id: ID of your querying contact
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Info_Contact
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -178,6 +181,7 @@ class Api(object):
         :param str _object: contact, nsset, keyset (only CZ, EE)
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Check_Object
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -189,6 +193,7 @@ class Api(object):
         :param str _object: contact, nsset, keyset (only CZ, EE)
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Info_Object
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -197,6 +202,7 @@ class Api(object):
         Create a new order (CreateDomain, ModifyDomain, RenewDomain, ... )
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Make_Order
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -207,6 +213,7 @@ class Api(object):
         :param int order_id: Order ID
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Info_Order
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -226,6 +233,7 @@ class Api(object):
         :param to_date: Date (YYYY-mm-dd)
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Get_Accountings
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -240,6 +248,7 @@ class Api(object):
         :param str currency: Currency of added credit
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Client_Payment
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -255,6 +264,7 @@ class Api(object):
         :param str reason: Human readable reason for this operation
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Credit_Correction
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -273,6 +283,7 @@ class Api(object):
         :type str tld: Requested TLD
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Prices
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -283,6 +294,7 @@ class Api(object):
         :param str pricelist: Identificator of the pricelist you want to download.
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Get_Pricelist
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -296,6 +308,7 @@ class Api(object):
         :param str prices: List of operations with price
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Set_Prices
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -308,6 +321,7 @@ class Api(object):
                             `Upload_Document` or by `List_Documents`.
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Download_Document
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -323,6 +337,7 @@ class Api(object):
         :param str filetype: MIME type of the file
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Upload_Document
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -396,6 +411,7 @@ class Api(object):
         :param list records: List of dicts of records
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Set_DNS_Zone
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -491,6 +507,7 @@ class Api(object):
         :param int poll_id: POLL ID
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=POLL_Ack
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -502,6 +519,7 @@ class Api(object):
         :param str oib: Croatian OIB number
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=OIB_Search
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -514,6 +532,7 @@ class Api(object):
         specification `here <https://soap.subreg.cz/manual/?cmd=DNSSEC>`_
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Create_Domain
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -522,6 +541,7 @@ class Api(object):
         Transfer domain between two registrars or two account
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Transfer_Domain
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -530,6 +550,7 @@ class Api(object):
         Transfer domain between two Subreg.CZ accounts.
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=AccountTransfer_Domain
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -538,6 +559,7 @@ class Api(object):
         Transfer Approve domain between two registrars
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=TransferApprove_Domain
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -546,6 +568,7 @@ class Api(object):
         Transfer Deny domain between two registrars
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=TransferDeny_Domain
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -554,6 +577,7 @@ class Api(object):
         Transfer Cancel domain between two registrars
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=TransferCancel_Domain
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -565,6 +589,7 @@ class Api(object):
         `Download_Document <https://soap.subreg.cz/manual/?cmd=Download_Document>`_.
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=SKChangeOwner_Domain
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -575,6 +600,7 @@ class Api(object):
         specification `here <https://soap.subreg.cz/manual/?cmd=DNSSEC>`_.
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Modify_Domain
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -585,6 +611,7 @@ class Api(object):
         specification `here <https://soap.subreg.cz/manual/?cmd=DNSSEC>`_.
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=ModifyNS_Domain
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -593,6 +620,7 @@ class Api(object):
         Delete a existing domain from your account
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Delete_Domain
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -601,6 +629,7 @@ class Api(object):
         Restore a deleted domain from your account
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Restore_Domain
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -609,6 +638,7 @@ class Api(object):
         Renew a existing domain from your account
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Renew_Domain
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -618,6 +648,7 @@ class Api(object):
         from registry
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Backorder_Domain
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -627,6 +658,7 @@ class Api(object):
         domain pre-registration
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Preregister_Domain
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -636,6 +668,7 @@ class Api(object):
         Only for registries with such capability (for example CZ-NIC or Eurid)
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Create_Object
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -644,12 +677,14 @@ class Api(object):
         Transfer object between two registrars (CZ-NIC)
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Transfer_Object
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
     def update_object(self):
         """
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Update_Object
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -661,6 +696,7 @@ class Api(object):
         NIC-D account for that domain.
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=TransferRU_Request
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -670,6 +706,7 @@ class Api(object):
         It is possible to specify multiple IPv4 and IPv6 addresses of the host.
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Create_Host
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -678,6 +715,7 @@ class Api(object):
         Change IP addresses of delegated host object.
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Update_Host
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
@@ -687,6 +725,7 @@ class Api(object):
         It is only possible to delete host when it is no longer used.
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Delete_Host
+        .. exception:: NotImplementedError
         """
         raise NotImplementedError
 
