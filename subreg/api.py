@@ -549,8 +549,9 @@ class Api(object):
         """
         Transfer domain between two Subreg.CZ accounts.
 
-        .. seealso:: https://soap.subreg.cz/manual/?cmd=AccountTransfer_Domain
         .. exception:: NotImplementedError
+
+        .. seealso:: https://soap.subreg.cz/manual/?cmd=AccountTransfer_Domain
         """
         raise NotImplementedError
 
