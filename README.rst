@@ -33,5 +33,4 @@ First import module and instance class
   >>> subreg.set_google_mx_records('example.com')
 
 
-- `python-subreg documentation <http://python-subreg.readthedocs.org/en/latest/>`_
-- `Subreg API documentation <https://soap.subreg.cz/manual/>`_
+`Subreg API documentation <https://soap.subreg.cz/manual/>`_
