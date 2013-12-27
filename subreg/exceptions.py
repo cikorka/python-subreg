@@ -25,5 +25,17 @@
 
 
 class ApiError(Exception):
+
     """Base class for exceptions in this module."""
-    pass
+
+    def __init__(self, message, major, minor):
+        self.message = message
+        self.major = int(major)
+        self.minor = int(minor)
+
+    def __str__(self):
+        return 'Major: {} Minor: {} Text: {}'.format(
+            self.major,
+            self.minor,
+            self.message,
+        )

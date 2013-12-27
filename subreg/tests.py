@@ -27,6 +27,7 @@ from __future__ import unicode_literals
 from getpass import getpass
 import unittest
 from subreg.api import Api
+from subreg.exceptions import ApiError
 
 print 'Promt your credentials to subreg.cz:'
 
@@ -57,6 +58,13 @@ class SubRegTestCase(unittest.TestCase):
             if not self.subreg.check_domain(domain):
                 raise Exception
 
+    def test_invalid_login(self):
+        with self.assertRaises(ApiError) as cm:
+            Api('invalid', 'login')
+
+        error = cm.exception
+        self.assertEqual(error.major, 500)
+        self.assertEqual(error.minor, 104)
 
 if __name__ == '__main__':
     unittest.main()
