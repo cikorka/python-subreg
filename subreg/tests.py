@@ -36,6 +36,7 @@ password = getpass()
 
 
 class SubRegTestCase(unittest.TestCase):
+
     """Tests for subreg"""
 
     def setUp(self):
@@ -45,18 +46,18 @@ class SubRegTestCase(unittest.TestCase):
         self.subreg.login(username, password)
 
     def test_login(self):
-        if not self.subreg.token:
-            raise Exception
+        self.assertIsNotNone(self.subreg.token)
 
     def test_check_domain(self):
         existing_domains = ['example.com', 'seznam.cz']
-        not_existing_domains = ['example-dhjasl.com', 'seznam-djaksdjhaskdj.cz']
+        not_existing_domains = ['example-dhjasl.com',
+                                'seznam-djaksdjhaskdj.cz']
         for domain in existing_domains:
-            if self.subreg.check_domain(domain):
-                raise Exception
+            self.assertFalse(self.subreg.check_domain(domain),
+                             'Expected existing domain to be not available')
         for domain in not_existing_domains:
-            if not self.subreg.check_domain(domain):
-                raise Exception
+            self.assertTrue(self.subreg.check_domain(domain),
+                            'Expected non-existant domain to be available')
 
     def test_invalid_login(self):
         with self.assertRaises(ApiError) as cm:
