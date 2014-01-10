@@ -766,11 +766,9 @@ class Api(object):
         if response:
             if response['status'] == 'error':
                 raise ApiError(
-                    'Major: {} Minor: {} Text: {}'.format(
-                        response['error']['errorcode']['major'],
-                        response['error']['errorcode']['minor'],
-                        response['error']['errormsg'],
-                    )
+                    message=response['error']['errormsg'],
+                    major=response['error']['errorcode']['major'],
+                    minor=response['error']['errorcode']['minor']
                 )
             return response.get('data')
         raise Exception('Fatal error.')
