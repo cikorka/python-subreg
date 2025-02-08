@@ -16,22 +16,22 @@ First import module and instance class
 
 ### Get information about a single domain from your account
 
-  >>> domain_info = subreg.info_domain('example.com')
-  >>> print domain_info
+    >>> domain_info = subreg.info_domain('example.com')
+    >>> print domain_info
 
 ### Get DNS Zone for domain
 
-  >>> records = subreg.get_dns_zone('example.com')
+    >>> records = subreg.get_dns_zone('example.com')
 
 ### Add DNS record to domain DNS zone
 
-  >>> record = dict(name='', type='TXT', content='content')
-  >>> record_id = subreg.add_dns_record('example.com', record)
-  >>> print record_id
+    >>> record = dict(name='', type='TXT', content='content')
+    >>> record_id = subreg.add_dns_record('example.com', record)
+    >>> print record_id
 
 ### - Set Google MX records
 
-  >>> subreg.set_google_mx_records('example.com')
+    >>> subreg.set_google_mx_records('example.com')
 
 
 
