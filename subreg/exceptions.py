@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2013 Petr Jerabek
 #
 # Permission is hereby granted, free of charge, to any person
@@ -25,7 +23,6 @@
 
 
 class ApiError(Exception):
-
     """Base class for exceptions in this module."""
 
     def __init__(self, message, major, minor):
@@ -34,7 +31,7 @@ class ApiError(Exception):
         self.minor = int(minor)
 
     def __str__(self):
-        return 'Major: {} Minor: {} Text: {}'.format(
+        return "Major: {} Minor: {} Text: {}".format(
             self.major,
             self.minor,
             self.message,

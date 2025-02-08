@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2013 Petr Jerabek
 #
 # Permission is hereby granted, free of charge, to any person
@@ -23,49 +21,58 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import unicode_literals
-from getpass import getpass
-import unittest
-from subreg.api import Api
-from subreg.exceptions import ApiError
 
-print 'Promt your credentials to subreg.cz:'
+import unittest
+from getpass import getpass
+
+from distlib.compat import raw_input
+
+from subreg import ApiError
+from subreg.api import Api
+
+print("Promt your credentials to subreg.cz:")
 
 username = raw_input("username: ")
 password = getpass()
 
 
 class SubRegTestCase(unittest.TestCase):
-
     """Tests for subreg"""
 
     def setUp(self):
-        self.subreg = Api()
-        # Change to test endpoint
-        self.subreg.endpoint = 'https://ote-soap.subreg.cz/cmd.php'
-        self.subreg.login(username, password)
+        self.subreg = Api(username, password)
 
     def test_login(self):
-        self.assertIsNotNone(self.subreg.token)
+        self.assertIsNotNone(self.subreg.ssid)
 
     def test_check_domain(self):
-        existing_domains = ['example.com', 'seznam.cz']
-        not_existing_domains = ['example-dhjasl.com',
-                                'seznam-djaksdjhaskdj.cz']
+        existing_domains = ["example.com", "seznam.cz"]
+        not_existing_domains = ["example-dhjasl.com", "seznam-djaksdjhaskdj.cz"]
         for domain in existing_domains:
-            self.assertFalse(self.subreg.check_domain(domain),
-                             'Expected existing domain to be not available')
+            self.assertFalse(
+                self.subreg.check_domain(domain),
+                "Expected existing domain to be not available",
+            )
         for domain in not_existing_domains:
-            self.assertTrue(self.subreg.check_domain(domain),
-                            'Expected non-existant domain to be available')
+            self.assertTrue(
+                self.subreg.check_domain(domain),
+                "Expected non-existant domain to be available",
+            )
+
+    def test_domains_list(self):
+        self.assertTrue(
+            isinstance(self.subreg.domains_list()["domains"], list),
+            "Expected return type to be list",
+        )
 
     def test_invalid_login(self):
         with self.assertRaises(ApiError) as cm:
-            Api('invalid', 'login')
+            Api("invalid", "login")
 
         error = cm.exception
         self.assertEqual(error.major, 500)
         self.assertEqual(error.minor, 104)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

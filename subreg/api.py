@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2013 Petr Jerabek
 #
 # Permission is hereby granted, free of charge, to any person
@@ -23,44 +21,39 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import unicode_literals
 
 import re
-from SOAPpy import SOAPProxy, typedArrayType
 
-from .exceptions import ApiError
+from requests import Session
+from zeep import Client
+from zeep.transports import Transport
+
+from subreg.exceptions import ApiError
 
 
-class Api(object):
-    """Python wrapper around the subreg.cz SOAP API"""
+class Api:
+    """
+    Python wrapper around the subreg.cz SOAP API
+    """
 
-    endpoint = 'https://soap.subreg.cz/cmd.php'
-
-    response = None
-    """Last parsed response from API"""
-
-    raw_response = None
-    """Last raw response from API"""
-
-    def __init__(self, username=None, password=None):
-        """"""
-        self.token = None
-        self.client = SOAPProxy(self.endpoint)
+    def __init__(self, username=None, password=None, wsdl="https://subreg.cz/wsdl"):
+        self.ssid = None
+        session = Session()
+        self.client = Client(wsdl=wsdl, transport=Transport(session=session))
         if username and password:
             self.login(username, password)
 
-    def login(self, username=None, password=None):
+    def login(self, username: str, password: str):
         """
         User login to API
 
         :param str username: Username for login
         :param str password: Password
 
-        .. seealso:: https://soap.subreg.cz/manual/?cmd=Login
+        seealso:: https://soap.subreg.cz/manual/?cmd=Login
         """
-        kwargs = {'login': username, 'password': password}
-        response = self._request('Login', kwargs)
-        self.token = response['ssid']
+        response = self._request("Login", {"login": username, "password": password})
+        self.ssid = response["ssid"]
 
     def check_domain(self, domain):
         """
@@ -70,34 +63,32 @@ class Api(object):
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Check_Domain
         """
-        kwargs = {'domain': domain}
-        response = self._request('Check_Domain', kwargs)
-        if response['avail'] == 1:
-            return True
-        return False
+        kwargs = {"domain": domain}
+        response = self._request("Check_Domain", kwargs)
+        return True if response["avail"] == 1 else False
 
     def info_domain(self, domain):
         """
-        Get informations about a single domain from your account
+        Get information about a single domain from your account
 
         :param str domain: Domain name for requested informations
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Info_Domain
         """
-        kwargs = {'domain': domain}
-        response = self._request('Info_Domain', kwargs)
+        kwargs = {"domain": domain}
+        response = self._request("Info_Domain", kwargs)
         return response
 
     def info_domain_cz(self, domain):
         """
-        Get informations about a single .CZ domain
+        Get information about a single .CZ domain
 
         :param str domain: Domain name for requested informations
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Info_Domain_CZ
         """
-        kwargs = {'domain': domain}
-        response = self._request('Info_Domain_CZ', kwargs)
+        kwargs = {"domain": domain}
+        response = self._request("Info_Domain_CZ", kwargs)
         return response
 
     def domains_list(self):
@@ -112,7 +103,7 @@ class Api(object):
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Domains_List
         """
-        return self._request('Domains_List')
+        return self._request("Domains_List")
 
     def set_autorenew(self, domain, autorenew):
         """
@@ -127,10 +118,10 @@ class Api(object):
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Set_Autorenew
         """
-        if autorenew in ['EXPIRE', 'AUTORENEW', 'RENEWONCE']:
-            kwargs = {'domain': domain, 'autorenew': autorenew}
+        if autorenew in ["EXPIRE", "AUTORENEW", "RENEWONCE"]:
+            kwargs = {"domain": domain, "autorenew": autorenew}
             try:
-                self._request('Set_Autorenew', kwargs)
+                self._request("Set_Autorenew", kwargs)
                 return True
             except ApiError:
                 return False
@@ -171,7 +162,7 @@ class Api(object):
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Contacts_List
         """
-        return self._request('Contacts_List')
+        return self._request("Contacts_List")
 
     def check_object(self, _id, _object):
         """
@@ -223,7 +214,7 @@ class Api(object):
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Get_Credit
         """
-        return self._request('Get_Credit')
+        return self._request("Get_Credit")
 
     def get_accountings(self, from_date, to_date):
         """
@@ -274,7 +265,7 @@ class Api(object):
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Pricelist
         """
-        return self._request('Pricelist')
+        return self._request("Pricelist")
 
     def prices(self, tld):
         """
@@ -347,7 +338,7 @@ class Api(object):
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=List_Documents
         """
-        return self._request('List_Documents')
+        return self._request("List_Documents")
 
     def users_list(self):
         """
@@ -355,7 +346,7 @@ class Api(object):
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Users_List
         """
-        return self._request('Users_List')
+        return self._request("Users_List")
 
     def get_dns_zone(self, domain):
         """
@@ -365,10 +356,10 @@ class Api(object):
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Get_DNS_Zone
         """
-        kwargs = {'domain': domain}
-        response = self._request('Get_DNS_Zone', kwargs)
+        kwargs = {"domain": domain}
+        response = self._request("Get_DNS_Zone", kwargs)
         try:
-            return response['records']
+            return response["records"]
         except KeyError:
             return []
 
@@ -381,11 +372,11 @@ class Api(object):
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Add_DNS_Zone
         """
-        kwargs = {'domain': domain}
+        kwargs = {"domain": domain}
         if not template:
-            kwargs['template'] = template
+            kwargs["template"] = template
         try:
-            self._request('Add_DNS_Zone', kwargs)
+            self._request("Add_DNS_Zone", kwargs)
             return True
         except ApiError:
             return False
@@ -398,8 +389,8 @@ class Api(object):
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=Delete_DNS_Zone
         """
-        kwargs = {'domain': domain}
-        response = self._request('Delete_DNS_Zone', kwargs)
+        kwargs = {"domain": domain}
+        response = self._request("Delete_DNS_Zone", kwargs)
         return response
 
     def set_dns_zone(self, domain, records):
@@ -434,11 +425,11 @@ class Api(object):
         if not isinstance(record, dict):
             raise TypeError
             # remove leading .
-        record['content'] = re.sub('\.$', '', record['content'])
-        kwargs = {'domain': domain, 'record': record}
+        record["content"] = re.sub(r"\.$", "", record["content"])
+        kwargs = {"domain": domain, "record": record}
         try:
-            response = self._request('Add_DNS_Record', kwargs)
-            return response['record_id']
+            response = self._request("Add_DNS_Record", kwargs)
+            return response["record_id"]
         except (KeyError, ApiError):
             return False
 
@@ -461,15 +452,15 @@ class Api(object):
         """
         if not isinstance(record, dict):
             raise TypeError
-        error_message = 'You must specify `record.id` when edit record.'
+        error_message = "You must specify `record.id` when edit record."
         try:
-            if not record['id']:
+            if not record["id"]:
                 raise Exception(error_message)
         except KeyError:
             raise Exception(error_message)
-        kwargs = {'domain': domain, 'record': record}
+        kwargs = {"domain": domain, "record": record}
         try:
-            self._request('Modify_DNS_Record', kwargs)
+            self._request("Modify_DNS_Record", kwargs)
             return True
         except (KeyError, ApiError):
             return False
@@ -485,9 +476,9 @@ class Api(object):
         """
         if not record_id:
             raise TypeError
-        kwargs = {'domain': domain, 'record': {'id': record_id}}
+        kwargs = {"domain": domain, "record": {"id": record_id}}
         try:
-            self._request('Delete_DNS_Record', kwargs)
+            self._request("Delete_DNS_Record", kwargs)
             return True
         except ApiError:
             return False
@@ -498,7 +489,7 @@ class Api(object):
 
         .. seealso:: https://soap.subreg.cz/manual/?cmd=POLL_Get
         """
-        return self._request('POLL_Get')
+        return self._request("POLL_Get")
 
     def poll_ack(self, poll_id):
         """
@@ -737,61 +728,39 @@ class Api(object):
         records = self.get_dns_zone(domain)
         for record in records:
             # delete all mx records
-            if record['type'] == 'MX':
-                self.delete_dns_record(domain, record['id'])
+            if record["type"] == "MX":
+                self.delete_dns_record(domain, record["id"])
 
         records = [
-            dict(content='ASPMX.L.GOOGLE.COM.', prio=1),
-            dict(content='ALT1.ASPMX.L.GOOGLE.COM.', prio=5),
-            dict(content='ALT2.ASPMX.L.GOOGLE.COM.', prio=5),
-            dict(content='ASPMX2.GOOGLEMAIL.COM.', prio=10),
-            dict(content='ASPMX3.GOOGLEMAIL.COM.', prio=10),
+            dict(content="ASPMX.L.GOOGLE.COM.", prio=1),
+            dict(content="ALT1.ASPMX.L.GOOGLE.COM.", prio=5),
+            dict(content="ALT2.ASPMX.L.GOOGLE.COM.", prio=5),
+            dict(content="ASPMX2.GOOGLEMAIL.COM.", prio=10),
+            dict(content="ASPMX3.GOOGLEMAIL.COM.", prio=10),
         ]
         for record in records:
-            record['ttl'] = 3600
-            record['type'] = 'MX'
+            record["ttl"] = 3600
+            record["type"] = "MX"
             self.add_dns_record(domain, record)
 
     def _request(self, command, kwargs=None):
         """Make request parse response"""
+
         if kwargs is None:
             kwargs = dict()
-        if self.token:
-            kwargs['ssid'] = self.token
-        method = getattr(self.client, command)
-        raw_response = method(**dict(data=kwargs))
-        response = self._parse_response(raw_response)
-        self.response = response
-        self.raw_response = raw_response
-        if response:
-            if response['status'] == 'error':
-                raise ApiError(
-                    message=response['error']['errormsg'],
-                    major=response['error']['errorcode']['major'],
-                    minor=response['error']['errorcode']['minor']
-                )
-            return response.get('data')
-        raise Exception('Fatal error.')
 
-    def _parse_response(self, response):
-        """Recursively parse response"""
-        result = dict()
-        if hasattr(response, 'item'):
-            result = self._parse_response(response.item)
-        elif hasattr(response, 'key'):
-            if isinstance(response.value, str) or \
-                    isinstance(response.value, int):
-                result = {response.key: response.value}
-            else:
-                result = {response.key: self._parse_response(response.value)}
-        elif isinstance(response, typedArrayType):
-            result = list()
-            for item in response:
-                returned = self._parse_response(item)
-                result.append(returned)
-        elif isinstance(response, list):
-            for item in response:
-                returned = self._parse_response(item)
-                if isinstance(returned, dict):
-                    result = dict(result.items() + returned.items())
-        return result
+        if self.ssid:
+            kwargs["ssid"] = self.ssid
+
+        method = getattr(self.client.service, command)
+        response = method(**kwargs)
+
+        if response:
+            if response["status"] == "error":
+                raise ApiError(
+                    message=response["error"]["errormsg"],
+                    major=response["error"]["errorcode"]["major"],
+                    minor=response["error"]["errorcode"]["minor"],
+                )
+            return response["data"]
+        raise Exception("Fatal error.")

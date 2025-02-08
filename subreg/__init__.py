@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2013 Petr Jerabek
 #
 # Permission is hereby granted, free of charge, to any person
@@ -23,5 +21,6 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
+# autoflake: skip_file
 from .api import *
 from .exceptions import *

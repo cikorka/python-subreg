@@ -1,0 +1,25 @@
+[project]
+name = "python-subreg"
+version = "1.0.0"
+authors = [
+  { name="Petr Jerabek", email="cikorka@me.com" },
+]
+description = "Python wrapper around the subreg.cz SOAP API"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+        "Development Status :: 3 - Alpha",
+]
+
+dependencies = [
+  "zeep==4.3.1",
+]
+
+[project.urls]
+Homepage = "http://github.com/cikorka/python-subreg"
+Issues = "http://github.com/cikorka/python-subreg/issues"
+
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
